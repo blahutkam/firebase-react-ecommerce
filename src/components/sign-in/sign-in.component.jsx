@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 
+import { signInWithGoogle } from "../../firebase/firebase.utils";
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -48,8 +50,12 @@ class SignIn extends Component {
             handleChange={this.handleChange}
             required
           />
-
-          <Button type="submit">SIGN IN</Button>
+          <div className="buttons">
+            <Button type="submit">Sign in</Button>
+            <Button onClick={signInWithGoogle} isGoogleSignIn>
+              Sign in with Google
+            </Button>
+          </div>
         </form>
       </div>
     );
