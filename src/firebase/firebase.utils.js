@@ -17,6 +17,14 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   const userRef = firestore.doc(`users/${userAuth.uid}`);
   const snapShot = await userRef.get();
 
+  // example
+  // const collectionRef = firestore.collection("users");
+  // const collectionSnapshot = await collectionRef.get();
+  //1
+  // console.log({ collectionSnapshot });
+  //2
+  // console.log({ collection: collectionSnapshot.docs.map((doc) => doc.data()) });
+
   if (!snapShot.exists) {
     const { displayName, email } = userAuth;
     const createdAt = new Date();
@@ -36,7 +44,55 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
+//https://www.udemy.com/course/complete-react-developer-zero-to-mastery/learn/lecture/15189164#questions
+//add collections from our app / redux to firebase
+//rest of the function in App.js
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  const collectionRef = firestore.collection(collectionKey);
+  // console.log(collectionRef);
+
+  const batch = firestore.batch();
+  objectsToAdd.forEach((obj) => {
+    //creates collection with our object names -hats, jackets etc.
+    //const newDocRef = collectionRef.doc(obj.title);
+
+    //creates collection with auto generated id
+    const newDocRef = collectionRef.doc();
+    //console.log(newDocRef);
+    batch.set(newDocRef, obj);
+  });
+
+  return await batch.commit();
+};
+
+//can you run just once to initialize?
 firebase.initializeApp(config);
+
+// fetch our collections from database
+//reuse blog
+//https://www.udemy.com/course/complete-react-developer-zero-to-mastery/learn/lecture/15234798#questions
+
+export const convertCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map((doc) => {
+    const { title, items } = doc.data();
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items,
+    };
+  });
+  // console.log(transformedCollection);
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+    //we're passing empty object as an initial acummulator
+  }, {});
+};
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
