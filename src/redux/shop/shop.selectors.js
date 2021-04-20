@@ -45,3 +45,9 @@ export const selectIsCollectionFetching = createSelector(
   [selectShop],
   (shop) => shop.isFetching
 );
+
+//!! gives false if it's called on boolean = 0, but gives  true when called on empty object
+export const selectIsCollectionLoaded = createSelector(
+  [selectShop],
+  (shop) => !!shop.collections
+);
