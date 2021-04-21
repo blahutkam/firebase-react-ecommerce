@@ -32,7 +32,7 @@ class SignIn extends Component {
         <h2>I already have an account</h2>
         <span>Sign in with your email or password</span>
 
-        <form onSubmit={this.handleSubmit}>
+        {/* <form onSubmit={this.handleSubmit}>
           <FormInput
             name="email"
             type="email"
@@ -49,14 +49,14 @@ class SignIn extends Component {
             value={this.state.password}
             handleChange={this.handleChange}
             required
-          />
+          /> */}
           <div className="buttons">
-            <Button type="submit">Sign in</Button>
+            {/* <Button type="submit">Sign in</Button> */}
             <Button onClick={signInWithGoogle} isGoogleSignIn>
               Sign in with Google
             </Button>
           </div>
-        </form>
+        {/* </form> */}
       </div>
     );
   }

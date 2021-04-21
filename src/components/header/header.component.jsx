@@ -32,7 +32,13 @@ const Header = ({ currentUser, hidden }) => (
           SIGN IN
         </Link>
       )}
-      <CartIcon />
+
+      {currentUser ? (
+        <CartIcon />
+      ) : (
+        null
+      )}
+      
     </div>
     {hidden ? null : <CartDropdown />}
   </div>
