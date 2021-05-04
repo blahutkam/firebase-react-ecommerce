@@ -1,5 +1,5 @@
 import "./scss/main.scss";
-import React, { Fragment, Component } from "react";
+import React, { useEffect, Fragment } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -19,38 +19,43 @@ import {
 import { setCurrentUser } from "./redux/user/user.actions";
 import SignIn from "./components/sign-in/sign-in.component";
 import { selectCurrentUser } from "./redux/user/user.selector";
+import { checkUserSession } from "./redux/user/user.actions";
+
 //to add collections from our app /redux to firebase
 //import { selectCollectionsForPreview } from "./redux/shop/shop.selectors";
 
-class App extends Component {
+class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
     //to add collections from our app /redux to firebase
     //const { setCurrentUser, collectionsArray } = this.props;
-    const { setCurrentUser } = this.props;
+    const { checkUserSession } = this.props;
 
-    //fetch authetificated user inside component did mount
-    //it's in the top level because our app might need info about current user
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
+    //repalced with saga
+    // //fetch authetificated user inside component did mount
+    // //it's in the top level because our app might need info about current user
+    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+    //   if (userAuth) {
+    //     const userRef = await createUserProfileDocument(userAuth);
 
-        userRef.onSnapshot((snapShot) => {
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data(),
-          });
-        });
-      }
+    //     userRef.onSnapshot((snapShot) => {
+    //       setCurrentUser({
+    //         id: snapShot.id,
+    //         ...snapShot.data(),
+    //       });
+    //     });
+    //   }
 
-      setCurrentUser(userAuth);
-      // add collections from our app / redux to firebase
-      // addCollectionAndDocuments(
-      //   "collections",
-      //   collectionsArray.map(({ title, items }) => ({ title, items }))
-      // );
-    });
+    //   setCurrentUser(userAuth);
+    //   // add collections from our app / redux to firebase
+    //   // addCollectionAndDocuments(
+    //   //   "collections",
+    //   //   collectionsArray.map(({ title, items }) => ({ title, items }))
+    //   // );
+    //});
+
+    checkUserSession();
   }
 
   componentWillUnmount() {
@@ -85,8 +90,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  //dispatch - whatever object your passing is going to be an action object that i am going to pass to every reducer
-  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+  checkUserSession: () => dispatch(checkUserSession()),
 });
+
 //iffirts parameter is null because we don't need mapStateToProps
 export default connect(mapStateToProps, mapDispatchToProps)(App);
